@@ -52,7 +52,15 @@ export enum EventKind {
   ContractUpgrade = 47,
   Log = 48,
   Inflation = 49,
+  OrderBid = 59,
   Custom = 64,
+}
+
+export enum TypeAuction {
+  Fixed = 0,
+  Classic = 1,
+  Reserve = 2,
+  Dutch = 3,
 }
 
 export class Decoder {
@@ -60,6 +68,10 @@ export class Decoder {
 
   constructor(str: string) {
     this.str = str;
+  }
+
+  isEnd() {
+    return this.str.length == 0;
   }
 
   readCharPair() {
@@ -191,6 +203,7 @@ export function getMarketEventData(str: string) {
     quoteSymbol: dec.readString(),
     id: dec.readBigIntAccurate(),
     amount: dec.readBigInt(),
+    endAmount: dec.isEnd() ? 0 : dec.readBigInt()
   };
 }
 
